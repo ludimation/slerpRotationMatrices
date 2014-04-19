@@ -79,8 +79,8 @@ function [ Qslerped ] = slerpQuaternions ( Q1, Q2, w )
 %SLERP Summary
 %   Detailed explanation goes here
 
-phi = acos(Q1 .* Q2);
-Qslerped = (Q1 * sin(1-w) .* phi./sin(phi)) + (Q2.*sin(w * phi)./sin(phi));
+theta = acos(Q1 * Q2');
+Qslerped = (Q1 * sin(1-w) * theta./sin(theta)) + (Q2.*sin(w * theta)./sin(theta));
 end
 
 function [ aa ] = quaternion2axisAngle ( Q )
