@@ -13,10 +13,12 @@ R2_aa_vrrotmat2vec = vrrotmat2vec(R2) % check against this this MATLAB function 
 
 % convert axisAngles to quaternions
 R1_Q_dallen = axisAngle2quaternion ( R1_aa_dallen )
+R1_Q_dallen-vrrotmat2vec = axisAngle2quaternion ( R1_aa_vrrotmat2vec )
 R1_Q_rotmat2quat = rotmat2quat( R1) % check against this online algorithm value
 % R1_Q_dcm2quat = dcm2quat(R1) % check against this MATLAB function value
 % -- not available with student license? - https://www.mathworks.com/programs/trials/trial_request.html?prodcode=AT&eventid=572392830&s_iid=main_trial_AT_cta2
 R2_Q_dallen = axisAngle2quaternion ( R2_aa_dallen )
+R2_Q_dallen-vrrotmat2vec = axisAngle2quaternion ( R2_aa_vrrotmat2vec )
 R2_Q_rotmat2quat = rotmat2quat( R2) % check against this online algorithm value
 % R2_Q_dcm2quat = dcm2quat(R2) % check against this MATLAB function value 
 % -- not available with student license? - https://www.mathworks.com/programs/trials/trial_request.html?prodcode=AT&eventid=572392830&s_iid=main_trial_AT_cta2
