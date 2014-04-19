@@ -5,8 +5,8 @@ function [ Rslerped ] = slerpRotationMatrices(R1, R2, w )
 %% Top-level Algorithm
 
 % convert rotation matrices to axisAngles
-[ R1_aa ] = rotation2axisAngle (R1)
-[ R2_aa ] = rotation2axisAngle (R2)
+[ R1_aa ] = rotmat2axisAngle (R1)
+[ R2_aa ] = rotmat2axisAngle (R2)
 % TODO: is there a matlab function for the above to check this?
 % vrrotmat2vec(R)?
 
@@ -24,13 +24,14 @@ Q = slerpQuaternions ( R1_Q, R2_Q, w )
 % TODO: is there a matlab function for the above to check this?
 
 % convert axisAngle to rotation matrix
-Rslerped = axisAngle2rotation ( aa );
+Rslerped = axisAngle2rotmat ( aa )
 % TODO: is there a matlab function for the above to check this?
-% vrrotvec2mat([ rn(1), rn(2), rn(3), theta ]) ?
 end
 
-function [ aa ] = rotation2axisAngle (R)
-%ROTATION2AXISANGLE Summary
+%% my own attempts at conversion functions
+
+function [ aa ] = rotmat2axisAngle (R)
+%ROTMAT2AXISANGLE Summary
 %   Detailed explanation goes here
 
 % get eigen vectors and values
@@ -76,19 +77,19 @@ end
 function [ aa ] = quaternion2axisAngle ( Q )
 %QUATERNION2AXISANGLE Summary
 %   Detailed explanation goes here
-theta = 2 * acos(Q(4))
-sinThetaOver2 = sin(theta / 2)
+theta = 2 * acos(Q(4));
+sinThetaOver2 = sin(theta / 2);
 rn = [                          ...
     Q(1) ./ sinThetaOver2    ;   ...
     Q(2) ./ sinThetaOver2    ;   ...
     Q(3) ./ sinThetaOver2        ...
     ]
 
-aa = [ rn; theta ]
+aa = [ rn; theta ];
 end
 
-function [ R ] = axisAngle2rotation ( aa )
-%AXISANGLE2ROTATION Summary
+function [ R ] = axisAngle2rotmat ( aa )
+%AXISANGLE2ROTMAT Summary
 %   Detailed explanation goes here
 theta = aa(4);
 rn = [ aa(1); aa(2); aa(3) ];
