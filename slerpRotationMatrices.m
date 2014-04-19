@@ -46,21 +46,21 @@ function [ AA ] = rotmat2axisAngle (R)
 %   Detailed explanation goes here
 
 % get eigen vectors and values
-[V, D] = eig(R);
+[ V, D ] = eig(R);
 
 % set axis to eigenVector column with corresponding value of 1
-[ row, col ] = find(abs(1-D) < 0.0001); % TODO: less wasteful ways to do this? (lamda mod size(D,2))?
+[ row, col ] = find(abs(1-D) < 0.0001); % TODO: less wasteful ways to do this? (lamda moded by size(D,2))?
 rn = V(:, col);
 
-% find theta
+% find theta % TODO: angle number still seems slightly off
 cosTheta = (trace(R)-1) / 2;
 sincTheta = [R(3,2)-R(2,3), R(1,3)-R(3,1), R(2,1)-R(1,2)]' ./ (2*rn);
 sinTheta = sincTheta * norm(rn);
 
-theta = atan2(cosTheta, sinTheta); % TODO: seems to be returning a 3x1 matrix. Should this be a single number?
-theta = theta(1); % TODO: brut-forcing for now, angle number seems slightly off, and signs are reversed as well (should technically be ok)
+theta = atan2(cosTheta, sinTheta); 
+theta = theta(1); % NOTE: atan2 above returns a 3x1 matrix which ok since they're all the same, but we need a single number
 
-AA = [rn; theta];
+AA = [rn; theta]; % TODO: signs are reversed (should technically be ok as long as all the numbers are correct)
 end
 
 function [ Q ] = axisAngle2quaternion ( AA )
