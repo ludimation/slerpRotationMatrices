@@ -5,9 +5,9 @@ function [ Rslerped ] = slerpRotationMatrices(R1, R2, w )
 %% Top-level Algorithm
 
 % convert rotation matrices to axisAngles
-[ R1_aa ] = rotmat2axisAngle (R1)
-[ R2_aa ] = rotmat2axisAngle (R2)
+R1_aa = rotmat2axisAngle (R1)
 % R1_vrrotmat2vec = vrrotmat2vec(R1) % check against this value
+R2_aa = rotmat2axisAngle (R2)
 % R2_vrrotmat2vec = vrrotmat2vec(R2) % check against this value
 % TODO: is there a matlab function for the above to check this?
 % vrrotmat2vec(R)?
@@ -26,7 +26,7 @@ Q = slerpQuaternions ( R1_Q, R2_Q, w )
 % TODO: is there a matlab function for the above to check this?
 
 % convert quaternion to axisAngle
-[ aa ] = quaternion2axisAngle ( Q )
+aa = quaternion2axisAngle ( Q )
 % TODO: is there a matlab function for the above to check this?
 
 % convert axisAngle to rotation matrix
