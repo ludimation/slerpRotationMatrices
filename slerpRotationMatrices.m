@@ -56,7 +56,7 @@ sincTheta = [R(3,2)-R(2,3), R(1,3)-R(3,1), R(2,1)-R(1,2)]' ./ (2*rn);
 sinTheta = sincTheta * norm(rn);
 
 theta = atan2(cosTheta, sinTheta); % TODO: seems to be returning a 3x1 matrix. Should this be a single number?
-theta = theta(1); % TODO: brut-forcing for now, numbers seem slightly off as well
+theta = theta(1); % TODO: brut-forcing for now, angle number seems slightly off, and signs are reversed as well (should technically be ok)
 
 AA = [rn; theta];
 end
