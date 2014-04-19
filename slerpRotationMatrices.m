@@ -1,40 +1,37 @@
-function [ Rslerped ] = slerpRotationMatrices(R1, R2, w )
+function [ Rslerped_dallen ] = slerpRotationMatrices(R1, R2, w )
 %SLERPROTATIONMATRICES Summary
 %   Detailed explanation goes here
+% TODO: might find some more ideas here ? http://www.mathworks.com/matlabcentral/newsreader/view_thread/301137
 
 %% Top-level Algorithm
 
 % convert rotation matrices to axisAngles
-R1_aa = rotmat2axisAngle (R1)
-% R1_vrrotmat2vec = vrrotmat2vec(R1) % check against this value
-R2_aa = rotmat2axisAngle (R2)
-% R2_vrrotmat2vec = vrrotmat2vec(R2) % check against this value
-% TODO: is there a matlab function for the above to check this?
-% vrrotmat2vec(R)?
+R1_aa_dallen = rotmat2axisAngle (R1)
+R1_aa_vrrotmat2vec = vrrotmat2vec(R1) % check against this this MATLAB function value
+R2_aa_dallen = rotmat2axisAngle (R2)
+R2_aa_vrrotmat2vec = vrrotmat2vec(R2) % check against this this MATLAB function value
 
 % convert axisAngles to quaternions
-R1_Q = axisAngle2quaternion ( R1_aa )
-% R1_Q_rotmat2quat = rotmat2quat( R1) % check against this value
-R2_Q = axisAngle2quaternion ( R2_aa )
-% R2_Q_rotmat2quat = rotmat2quat( R2) % check against this value
-% TODO: is there a matlab function for the above to check this?
-% found one online at http://smallsats.org/2012/12/09/euler-rotation-example-rotation-matrix-quaternion-euler-axis-and-principal-angle/
+R1_Q_dallen = axisAngle2quaternion ( R1_aa_dallen )
+R1_Q_rotmat2quat = rotmat2quat( R1) % check against this online algorithm value
+% R1_Q_dcm2quat = dcm2quat(R1) % check against this MATLAB function value -- not available with student license!
+R2_Q_dallen = axisAngle2quaternion ( R2_aa_dallen )
+R2_Q_rotmat2quat = rotmat2quat( R2) % check against this online algorithm value
+% R2_Q_dcm2quat = dcm2quat(R2) % check against this MATLAB function value -- not available with student license!
 
 % slerp between the two quaternions
-Qslerped = slerpQuaternions ( R1_Q, R2_Q, w )
-% Q_slerpDayot = slerpDayot ( R1_Q, R2_Q, w ) % check against this value
-% TODO: is there a matlab function for the above to check this?
+Qslerped_dallen = slerpQuaternions ( R1_Q_dallen, R2_Q_dallen, w )
+Qslerped_Dayot = slerpDayot ( R1_Q_dallen, R2_Q_dallen, w ) % check against this online algorithm value
 
 % convert quaternion to axisAngle
-AAslerped = quaternion2axisAngle ( Qslerped )
+AAslerped_dallen = quaternion2axisAngle ( Qslerped_dallen )
 % TODO: is there a matlab function for the above to check this?
 
 % convert axisAngle to rotation matrix
-Rslerped = axisAngle2rotmat ( AAslerped );
-% R_vrrotvec2mat = vrrotvec2mat( aa ) % check against this value
-% R_quat2dc = quat2dc (Q) % check against this value
-% TODO: is there a matlab function for the above to check this?
-% found one online at http://www.mathworks.com/matlabcentral/newsreader/view_thread/160945
+Rslerped_dallen = axisAngle2rotmat ( AAslerped_dallen )
+Rslerped_vrrotvec2mat = vrrotvec2mat( AAslerped_dallen ) % check against this MATLAB function value
+Rslerped_quat2dc = quat2dcmTursa (Qslerped_dallen) % check against this online algorithm value
+% R1_Q_quat2dcm = quat2dcm(Qslerped) % check against this MATLAB function value -- not available with student license!
 end
 
 %% my own attempts at conversion functions
@@ -156,7 +153,7 @@ function [qm] = slerpDayot (qi, qn, t, eps)
 %                      t=[0 to 1]
 %                      eps=threshold value
 
-% set default epsilon if none was passed
+% added by dallen: set default epsilon if none was passed
 if (nargin < 4)
     eps = 0.01;
 end
@@ -204,7 +201,7 @@ end
 
 
 % source - http://www.mathworks.com/matlabcentral/newsreader/view_thread/160945
-function [ dc ] = quat2dc(q)
+function [ dc ] = quat2dcmTursa(q)
 % quat2dc quaternion direction cosine matrix angle axis
 %*******************************************************************
 %
@@ -242,5 +239,5 @@ dc(1,3) = 2 * (q24 - q13);
 dc(2,3) = 2 * (q34 + q12);
 dc(3,3) = q11 - q22 - q33 + q44;
 
-return
+return;
 end
