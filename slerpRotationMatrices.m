@@ -21,16 +21,16 @@ R2_Q = axisAngle2quaternion ( R2_aa )
 % found one online at http://smallsats.org/2012/12/09/euler-rotation-example-rotation-matrix-quaternion-euler-axis-and-principal-angle/
 
 % slerp between the two quaternions
-Q = slerpQuaternions ( R1_Q, R2_Q, w )
+Qslerped = slerpQuaternions ( R1_Q, R2_Q, w )
 % Q_slerpDayot = slerpDayot ( R1_Q, R2_Q, w ) % check against this value
 % TODO: is there a matlab function for the above to check this?
 
 % convert quaternion to axisAngle
-aa = quaternion2axisAngle ( Q )
+AAslerped = quaternion2axisAngle ( Qslerped )
 % TODO: is there a matlab function for the above to check this?
 
 % convert axisAngle to rotation matrix
-Rslerped = axisAngle2rotmat ( aa );
+Rslerped = axisAngle2rotmat ( AAslerped );
 % R_vrrotvec2mat = vrrotvec2mat( aa ) % check against this value
 % R_quat2dc = quat2dc (Q) % check against this value
 % TODO: is there a matlab function for the above to check this?
@@ -39,7 +39,7 @@ end
 
 %% my own attempts at conversion functions
 
-function [ aa ] = rotmat2axisAngle (R)
+function [ AA ] = rotmat2axisAngle (R)
 %ROTMAT2AXISANGLE Summary
 %   Detailed explanation goes here
 
@@ -58,24 +58,24 @@ sinTheta = sincTheta * norm(rn);
 theta = atan2(cosTheta, sinTheta); % TODO: seems to be returning a 3x1 matrix. Should this be a single number?
 theta = theta(1); % TODO: brut-forcing for now, numbers seem slightly off as well
 
-aa = [rn; theta];
+AA = [rn; theta];
 end
 
-function [ Q ] = axisAngle2quaternion ( aa )
+function [ Q ] = axisAngle2quaternion ( AA )
 %AXISANGLE2QUATERNION Summary
 %   Detailed explanation goes here
 
-theta = aa(4);
+theta = AA(4);
 sinThetaOver2 = sin(theta / 2);
-q1 = aa(1) * sinThetaOver2;
-q2 = aa(2) * sinThetaOver2;
-q3 = aa(3) * sinThetaOver2;
-q4 = cos(aa(4) / 2);
+q1 = AA(1) * sinThetaOver2;
+q2 = AA(2) * sinThetaOver2;
+q3 = AA(3) * sinThetaOver2;
+q4 = cos(AA(4) / 2);
 
 Q = [ q1, q2, q3, q4 ];
 end
 
-function [ Qslerped ] = slerpQuaternions ( Q1, Q2, w )
+function [ Qslerped ] = slerpQuaternions ( Q1, Q2, W )
 %SLERP Summary
 %   Detailed explanation goes here
 
@@ -83,7 +83,7 @@ theta = acos(dot(Q1, Q2));
 Qslerped = (Q1 * sin(1-W) * theta / sin(theta)) + (Q2 * sin(W * theta) / sin(theta));
 end
 
-function [ aa ] = quaternion2axisAngle ( Q )
+function [ AA ] = quaternion2axisAngle ( Q )
 %QUATERNION2AXISANGLE Summary
 %   Detailed explanation goes here
 theta = 2 * acos(Q(4));
@@ -92,16 +92,16 @@ rn = [                          ...
     Q(1) ./ sinThetaOver2    ;   ...
     Q(2) ./ sinThetaOver2    ;   ...
     Q(3) ./ sinThetaOver2        ...
-    ]
+    ];
 
-aa = [ rn; theta ];
+AA = [ rn; theta ];
 end
 
-function [ R ] = axisAngle2rotmat ( aa )
+function [ R ] = axisAngle2rotmat ( AA )
 %AXISANGLE2ROTMAT Summary
 %   Detailed explanation goes here
-theta = aa(4);
-rn = [ aa(1); aa(2); aa(3) ];
+theta = AA(4);
+rn = [ AA(1); AA(2); AA(3) ];
 r = rn * theta;
 rMag = norm(r); % TODO: doesn't this just equal theta?
 rx = [                          ...
