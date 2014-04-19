@@ -65,14 +65,24 @@ function [ Q ] = axisAngle2quaternion ( AA )
 %AXISANGLE2QUATERNION Summary
 %   Detailed explanation goes here
 
+Q = zeros([1, 4]);
 theta = AA(4);
-sinThetaOver2 = sin(theta / 2);
-q1 = AA(1) * sinThetaOver2;
-q2 = AA(2) * sinThetaOver2;
-q3 = AA(3) * sinThetaOver2;
-q4 = cos(AA(4) / 2);
+Q(1:3) = AA(1:3)' * sin(theta / 2);
+Q(4) = cos(theta / 2);
 
-Q = [ q1, q2, q3, q4 ];
+% sinThetaOver2 = sin(theta / 2);
+% q1 = AA(1) * sinThetaOver2;
+% q2 = AA(2) * sinThetaOver2;
+% q3 = AA(3) * sinThetaOver2;
+% q4 = cos(theta / 2);
+% q = [ q1, q2, q3, q4 ];
+% 
+% if (Q == q)
+%     message = 'Q is equal to previous calculations already'
+% else
+%     message = 'Q was NOT equal to previous calculations'
+%     Q = q;
+% end
 end
 
 function [ Qslerped ] = slerpQuaternions ( Q1, Q2, W )
@@ -87,12 +97,21 @@ function [ AA ] = quaternion2axisAngle ( Q )
 %QUATERNION2AXISANGLE Summary
 %   Detailed explanation goes here
 theta = 2 * acos(Q(4));
-sinThetaOver2 = sin(theta / 2);
-rn = [                          ...
-    Q(1) ./ sinThetaOver2    ;   ...
-    Q(2) ./ sinThetaOver2    ;   ...
-    Q(3) ./ sinThetaOver2        ...
-    ];
+rn = zeros([3, 1]);
+rn(1:3) = Q(1:3)' ./ sin(theta / 2);
+
+% sinThetaOver2 = sin(theta / 2);
+% rn2 = [                          ...
+%     Q(1) ./ sinThetaOver2    ;   ...
+%     Q(2) ./ sinThetaOver2    ;   ...
+%     Q(3) ./ sinThetaOver2        ...
+%     ];
+% if (rn == rn2)
+%     message = 'rn is equal to previous calculations already'
+% else
+%     message = 'rn was NOT equal to previous calculations'
+%     rn = rn2;
+% end
 
 AA = [ rn; theta ];
 end
