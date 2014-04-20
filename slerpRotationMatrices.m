@@ -71,7 +71,8 @@ end
 
 function [ Q ] = axisAngle2quaternion ( AA )
 %AXISANGLE2QUATERNION Summary
-%   Detailed explanation goes here
+%   assumes AA = axis angle representation with AA(4) = theta, AA(1:3) = vector
+%   returns Q with Q(4) = scalar, Q(1:3) = vector (is this a normalized quaterion?)
 
 Q = zeros( [ 1, 4 ] );
 theta = AA( 4 );
@@ -89,7 +90,8 @@ end
 
 function [ AA ] = quaternion2axisAngle ( Q )
 %QUATERNION2AXISANGLE Summary
-%   Detailed explanation goes here
+%   assumes Q = Quaterion representation with Q(4) = scalar, Q(1:3) = vector (is this a normalized quaterion?)
+%   returns AA = axis angle representation with AA(4) = theta, AA(1:3) = vector
 theta = 2 * acos( Q( 4 ) );
 rn = zeros( [ 3, 1 ] );
 rn( 1:3 ) = Q( 1:3 )' ./ sin( theta / 2 );
