@@ -40,7 +40,7 @@ AAslerped_dallen = quaternion2axisAngle ( Qslerped_dallen ) % NOTE: this seems t
 %      calculations for this function match vrrotvec2mat() at this point.
 Rslerped_dallen = axisAngle2rotMat ( AAslerped_dallen )
 % Rslerped_vrrotvec2mat = vrrotvec2mat( AAslerped_dallen ) % NOTE: matches this MATLAB function value
-Rslerped_quat2dc = quat2dcmTursa ( Qslerped_dallen ) % check against this online algorithm value
+Rslerped_quat2dc = quat2dcmTursa ( [ Qslerped_dallen(4), Qslerped_dallen(1:3) ] )    % check against this online algorithm value (function assumes scalar is in the first position of the matrix)
 % R1_Q_quat2dcm = quat2dcm( Qslerped ) % check against this MATLAB function value
 %      -- not available with student license? - https://www.mathworks.com/programs/trials/trial_request.html?prodcode=AT&eventid=572392830&s_iid=main_trial_AT_cta2
 end
