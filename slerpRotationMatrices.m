@@ -46,53 +46,52 @@ end
 
 %% my own attempts at conversion functions
 
-function [ AA ] = rotmat2axisAngle (R)
+function [ AA ] = rotmat2axisAngle ( R )
 %ROTMAT2AXISANGLE Summary
 %   Detailed explanation goes here
 
 % get eigen vectors and values
-[ V, D ] = eig(R);
+[ V, D ] = eig( R );
 
 % set axis to eigenVector column with corresponding value of 1
-[ row, col ] = find(abs(1-D) < 0.0001); % TODO: less wasteful ways to do this? (lamda moded by size(D,2))?
-rn = V(:, col);
+[ row, col ] = find( abs( 1 - D ) < 0.0001 ); % TODO: less wasteful ways to do this? (lamda moded by size(D,2))?
+rn = V( :, col );
 
 % find theta 
-%      TODO: angle number still incorrect
-cosTheta = (trace(R)-1) / 2;
-sincTheta = [R(3,2)-R(2,3), R(1,3)-R(3,1), R(2,1)-R(1,2)]' ./ (2*rn);
-sinTheta = sincTheta * norm(rn);
+cosTheta = ( trace( R ) - 1 ) / 2;
+sincTheta = [ R( 3, 2 ) - R( 2, 3 ), R( 1, 3 ) - R( 3, 1 ), R( 2, 1 )-R( 1, 2 ) ]' ./ ( 2 * rn );
+sinTheta = sincTheta * norm( rn );
 
-theta = theta(1); % NOTE: atan2 above returns a 3x1 matrix which ok since they're all the same, but we need a single number
 theta = atan2( sinTheta, cosTheta ); 
+theta = theta( 1 ); % NOTE: atan2 above returns a 3x1 matrix which is ok since all the values are the same, but we need a single number
 
-AA = [rn; theta]; % TODO: signs are reversed (should technically be ok as long as all the numbers are correct)
+AA = [ rn; theta ]; % TODO: signs are reversed (should technically be ok as long as all the numbers are correct)
 end
 
 function [ Q ] = axisAngle2quaternion ( AA )
 %AXISANGLE2QUATERNION Summary
 %   Detailed explanation goes here
 
-Q = zeros([1, 4]);
-theta = AA(4);
-Q(1:3) = AA(1:3)' * sin(theta / 2);
-Q(4) = cos(theta / 2);
+Q = zeros( [ 1, 4 ] );
+theta = AA( 4 );
+Q( 1:3 ) = AA( 1:3 )' * sin( theta / 2 );
+Q( 4 ) = cos( theta / 2 );
 end
 
 function [ Qslerped ] = slerpQuaternions ( Q1, Q2, W )
 %SLERP Summary
 %   Detailed explanation goes here
 
-theta = acos(dot(Q1, Q2));
-Qslerped = (Q1 * sin((1-W) * theta) / sin(theta)) + (Q2 * sin(W * theta) / sin(theta));
+theta = acos( dot( Q1, Q2 ) );
+Qslerped = ( Q1 * sin( ( 1 - W ) * theta ) / sin( theta ) ) + ( Q2 * sin( W * theta ) / sin( theta ) );
 end
 
 function [ AA ] = quaternion2axisAngle ( Q )
 %QUATERNION2AXISANGLE Summary
 %   Detailed explanation goes here
-theta = 2 * acos(Q(4));
-rn = zeros([3, 1]);
-rn(1:3) = Q(1:3)' ./ sin(theta / 2);
+theta = 2 * acos( Q( 4 ) );
+rn = zeros( [ 3, 1 ] );
+rn( 1:3 ) = Q( 1:3 )' ./ sin( theta / 2 );
 
 AA = [ rn; theta ];
 end
