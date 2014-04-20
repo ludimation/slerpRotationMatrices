@@ -9,8 +9,8 @@ R1_aa_dallen = rotMat2axisAngle ( R1 )
 R2_aa_dallen = rotMat2axisAngle ( R2 )
 % R2_aa_vrrotmat2vec = vrrotmat2vec( R2 ) % NOTE: matches this MATLAB function value
 
-% test inverse funtion -- value should equal R2 (Works!)
-% R2_axisAngle2rotmat = axisAngle2rotMat ( R2_aa_dallen )
+% test inverse funtion -- value should equal R2 (not working yet :()
+R2_axisAngle2rotmat = axisAngle2rotMat ( R2_aa_dallen )
 
 %% convert axisAngles to quaternions
 %      NOTES: calculations seem correct, but signs are reversed which is 
@@ -24,8 +24,8 @@ R2_Q_dallen = axisAngle2quaternion ( R2_aa_dallen )
 % R2_Q_dcm2quat = dcm2quat( R2 ) % check against this MATLAB function value 
 %      -- not available with student license? - https://www.mathworks.com/programs/trials/trial_request.html?prodcode=AT&eventid=572392830&s_iid=main_trial_AT_cta2
 
-% test inverse conversion funtion
-R2_aa_dallen_quaternion2axisAngle = quaternion2axisAngle ( R2_Q_dallen ) % should equal R2_aa_dallen
+% test inverse conversion funtion -- should equal R2_aa_dallen (Works!)
+% R2_aa_dallen_quaternion2axisAngle = quaternion2axisAngle ( R2_Q_dallen )
 
 %% slerp between the two quaternions
 Qslerped_dallen = slerpQuaternions ( R1_Q_dallen, R2_Q_dallen, w )
