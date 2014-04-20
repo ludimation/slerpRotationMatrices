@@ -9,6 +9,9 @@ R1_aa_dallen = rotmat2axisAngle ( R1 )
 R2_aa_dallen = rotmat2axisAngle ( R2 )
 % R2_aa_vrrotmat2vec = vrrotmat2vec( R2 ) % NOTE: matches this MATLAB function value
 
+% test inverse conversion funtion
+R2_axisAngle2rotmat = axisAngle2rotmat ( R2_aa_dallen )
+
 %% convert axisAngles to quaternions
 %      NOTES: calculations seem correct, but signs are reversed which is 
 %      probably because they came in that way from previous calculations
