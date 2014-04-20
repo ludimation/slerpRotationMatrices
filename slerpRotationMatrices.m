@@ -68,8 +68,8 @@ cosTheta = (trace(R)-1) / 2;
 sincTheta = [R(3,2)-R(2,3), R(1,3)-R(3,1), R(2,1)-R(1,2)]' ./ (2*rn);
 sinTheta = sincTheta * norm(rn);
 
-theta = atan2(cosTheta, sinTheta); 
 theta = theta(1); % NOTE: atan2 above returns a 3x1 matrix which ok since they're all the same, but we need a single number
+theta = atan2( sinTheta, cosTheta ); 
 
 AA = [rn; theta]; % TODO: signs are reversed (should technically be ok as long as all the numbers are correct)
 end
