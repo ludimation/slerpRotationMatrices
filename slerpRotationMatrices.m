@@ -118,7 +118,9 @@ rx = [                        ...
 %     ];
 
 % TODO: this calculation seems to still be a bit off (diagonal values are
-%      correct, but all upper right and lower left values are not)
+%      correct, but all upper right and lower left values are not. Does
+%      that suggest there is something wrong with the rx matrix or the
+%      second term in the function below?)
 R = cos(rMag) * eye(3)                                  ...
     + sinc(rMag) .* rx                                  ... %     + (sin(rMag) / rMag) .* rx                      ...
     + ( ( 1 - cos(rMag) ) / rMag^2 ) .* ( r * r') ; 
