@@ -66,7 +66,7 @@ sinTheta = sincTheta * norm( rn );
 theta = atan2( sinTheta, cosTheta ); 
 theta = theta( 1 ); % NOTE: atan2 above returns a 3x1 matrix which is ok since all the values are the same, but we need a single number
 
-AA = [ rn; theta ]; % TODO: signs are reversed (should technically be ok as long as all the numbers are correct)
+AA = [ rn; theta ]; % TODO: signs are reversed (should technically be ok since it is simmetrical to negated axis angle... as long as all the numbers are correct)
 end
 
 function [ Q ] = axisAngle2quaternion ( AA )
