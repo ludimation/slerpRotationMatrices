@@ -2,47 +2,49 @@ function [ Rslerped_dallen ] = slerpRotationMatrices( R1, R2, w )
 %SLERPROTATIONMATRICES Summary
 %   Detailed explanation goes here
 %      TODO: might find some more ideas here ? http://www.mathworks.com/matlabcentral/newsreader/view_thread/301137
+%      -- some other methods not available with student license? - https://www.mathworks.com/programs/trials/trial_request.html?prodcode=AT&eventid=572392830&s_iid=main_trial_AT_cta2
+%         R2_Q_dcm2quat = dcm2quat( R2 ); % check against this MATLAB function value 
+%         R1_Q_quat2dcm = quat2dcm( Qslerped ); % check against this MATLAB function value
 
 %% convert rotation matrices to axisAngles
 R1_aa_dallen = rotMat2axisAngle ( R1 )
-% R1_aa_vrrotmat2vec = vrrotmat2vec( R1 ) % NOTE: matches this MATLAB function value
 R2_aa_dallen = rotMat2axisAngle ( R2 )
-% R2_aa_vrrotmat2vec = vrrotmat2vec( R2 ) % NOTE: matches this MATLAB function value
+% % NOTE: the values returned by functions above matche values ouput by
+%      MATLAB functions below
+% R1_aa_vrrotmat2vec = vrrotmat2vec( R1 )
+% R2_aa_vrrotmat2vec = vrrotmat2vec( R2 )
 
-% test inverse funtion -- value should equal R2 (not working yet :()
-R2_axisAngle2rotmat = axisAngle2rotMat ( R2_aa_dallen )
 
 %% convert axisAngles to quaternions
-%      NOTES: calculations seem correct, but signs are reversed which is 
-%      probably because they came in that way from previous calculations
 R1_Q_dallen = axisAngle2quaternion ( R1_aa_dallen )
-% R1_Q_rotmat2quat = rotmat2quat( R1 ) % NOTE: matches this online algorithm if I use correct AA angle from vrrotmat2vec()
-% R1_Q_dcm2quat = dcm2quat(R1) % check against this MATLAB function value
-%      -- not available with student license? - https://www.mathworks.com/programs/trials/trial_request.html?prodcode=AT&eventid=572392830&s_iid=main_trial_AT_cta2
 R2_Q_dallen = axisAngle2quaternion ( R2_aa_dallen )
-% R2_Q_rotmat2quat = rotmat2quat( R2 ) % NOTE: matches this online algorithm if I use correct AA angle from vrrotmat2vec()
-% R2_Q_dcm2quat = dcm2quat( R2 ) % check against this MATLAB function value 
-%      -- not available with student license? - https://www.mathworks.com/programs/trials/trial_request.html?prodcode=AT&eventid=572392830&s_iid=main_trial_AT_cta2
-
-% test inverse conversion funtion -- should equal R2_aa_dallen (Works!)
-% R2_aa_dallen_quaternion2axisAngle = quaternion2axisAngle ( R2_Q_dallen )
+% % NOTE: values from above seem correct since they match values from an
+%      online algorithm (below), but signs are reversed. is this where my
+%      problems are coming from?
+% R1_Q_rotmat2quat = rotmat2quat( R1 ) % NOTE: matches this online algorithm
+% R2_Q_rotmat2quat = rotmat2quat( R2 ) % NOTE: matches this online algorithm
 
 %% slerp between the two quaternions
 Qslerped_dallen = slerpQuaternions ( R1_Q_dallen, R2_Q_dallen, w )
-% Qslerped_Dayot = slerpDayot ( R1_Q_dallen, R2_Q_dallen, w ) % NOTE: matches this online algorithm value
+% % NOTE: value returned above matches value of online algorithm below
+% Qslerped_Dayot = slerpDayot ( R1_Q_dallen, R2_Q_dallen, w )
 
 %% convert quaternion to axisAngle
-AAslerped_dallen = quaternion2axisAngle ( Qslerped_dallen ) % NOTE: this seems to be correct since it produces the same values fed to its inverse function: rotmat2axisAngle()
+AAslerped_dallen = quaternion2axisAngle ( Qslerped_dallen )
+% % NOTE: value returned above matches the value returned by the inverse 
+%      function below
+% Qslerped_dallen_axisAngle2quaternion = axisAngle2quaternion( AAslerped_dallen )
 
 %% convert axisAngle to rotation matrix
-%      NOTES: doesn't quite match the online algorythm yet, but that's
-%      likely because my conversion from Quat to axis angle is off since my
-%      calculations for this function match vrrotvec2mat() at this point.
 Rslerped_dallen = axisAngle2rotMat ( AAslerped_dallen )
-% Rslerped_vrrotvec2mat = vrrotvec2mat( AAslerped_dallen ) % NOTE: matches this MATLAB function value
-Rslerped_quat2dc = quat2dcmTursa ( [ Qslerped_dallen(4), Qslerped_dallen(1:3) ] )    % check against this online algorithm value (function assumes scalar is in the first position of the matrix)
-% R1_Q_quat2dcm = quat2dcm( Qslerped ) % check against this MATLAB function value
-%      -- not available with student license? - https://www.mathworks.com/programs/trials/trial_request.html?prodcode=AT&eventid=572392830&s_iid=main_trial_AT_cta2
+% % NOTE: value does not match the online algorythm Rslerped_quat2dc(), or
+%      the MATLAB function vrrotvec2mat(), nor the inverse functions
+%      rotMat2axisAngle() and MATLAB's vrrotmat2vec()
+Rslerped_vrrotvec2mat = vrrotvec2mat( AAslerped_dallen )
+Rslerped_quat2dc = quat2dcmTursa ( [ Qslerped_dallen(4), Qslerped_dallen(1:3) ] )    % assumes scalar is in the first position of the matrix
+% % test inverse funtions -- values below should equal AAslerped_dallen (not working yet :()
+% AAslerped_dallen_dallenRotMat2axisAngle = rotMat2axisAngle ( Rslerped_dallen )
+% AAslerped_dallen_vrrotmat2vec = vrrotmat2vec ( Rslerped_dallen )
 end
 
 %% my own attempts at conversion functions
