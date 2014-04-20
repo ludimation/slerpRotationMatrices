@@ -4,13 +4,13 @@ function [ Rslerped_dallen ] = slerpRotationMatrices( R1, R2, w )
 %      TODO: might find some more ideas here ? http://www.mathworks.com/matlabcentral/newsreader/view_thread/301137
 
 %% convert rotation matrices to axisAngles
-R1_aa_dallen = rotmat2axisAngle ( R1 )
+R1_aa_dallen = rotMat2axisAngle ( R1 )
 % R1_aa_vrrotmat2vec = vrrotmat2vec( R1 ) % NOTE: matches this MATLAB function value
-R2_aa_dallen = rotmat2axisAngle ( R2 )
+R2_aa_dallen = rotMat2axisAngle ( R2 )
 % R2_aa_vrrotmat2vec = vrrotmat2vec( R2 ) % NOTE: matches this MATLAB function value
 
 % test inverse funtion -- value should equal R2 (Works!)
-% R2_axisAngle2rotmat = axisAngle2rotmat ( R2_aa_dallen )
+% R2_axisAngle2rotmat = axisAngle2rotMat ( R2_aa_dallen )
 
 %% convert axisAngles to quaternions
 %      NOTES: calculations seem correct, but signs are reversed which is 
@@ -38,7 +38,7 @@ AAslerped_dallen = quaternion2axisAngle ( Qslerped_dallen ) % NOTE: this seems t
 %      NOTES: doesn't quite match the online algorythm yet, but that's
 %      likely because my conversion from Quat to axis angle is off since my
 %      calculations for this function match vrrotvec2mat() at this point.
-Rslerped_dallen = axisAngle2rotmat ( AAslerped_dallen )
+Rslerped_dallen = axisAngle2rotMat ( AAslerped_dallen )
 % Rslerped_vrrotvec2mat = vrrotvec2mat( AAslerped_dallen ) % NOTE: matches this MATLAB function value
 Rslerped_quat2dc = quat2dcmTursa ( Qslerped_dallen ) % check against this online algorithm value
 % R1_Q_quat2dcm = quat2dcm( Qslerped ) % check against this MATLAB function value
@@ -47,7 +47,7 @@ end
 
 %% my own attempts at conversion functions
 
-function [ AA ] = rotmat2axisAngle ( R )
+function [ AA ] = rotMat2axisAngle ( R )
 %ROTMAT2AXISANGLE Summary
 %   Detailed explanation goes here
 
@@ -97,7 +97,7 @@ rn( 1:3 ) = Q( 1:3 )' ./ sin( theta / 2 );
 AA = [ rn; theta ];
 end
 
-function [ R ] = axisAngle2rotmat ( AA )
+function [ R ] = axisAngle2rotMat ( AA )
 %AXISANGLE2ROTMAT Summary
 %   Detailed explanation goes here
 theta = AA( 4 );
