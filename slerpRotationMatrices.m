@@ -37,11 +37,11 @@ AAslerped_dallen = quaternion2axisAngle ( Qslerped_dallen )
 
 %% convert axisAngle to rotation matrix
 Rslerped_dallen = axisAngle2rotMat ( AAslerped_dallen )
-% % NOTE: value does not match the online algorythm Rslerped_quat2dc(), or
-%      the MATLAB function vrrotvec2mat(), nor the inverse functions
-%      rotMat2axisAngle() and MATLAB's vrrotmat2vec()
-Rslerped_vrrotvec2mat = vrrotvec2mat( AAslerped_dallen )
-Rslerped_quat2dc = quat2dcmTursa ( [ Qslerped_dallen(4), Qslerped_dallen(1:3) ] )    % assumes scalar is in the first position of the matrix
+% % NOTE: value does not match the Tursa algorythm Rslerped_quat2dc(), but
+%      it DOES match the MATLAB function vrrotvec2mat(), as well as the 
+%      inverse functions rotMat2axisAngle() and MATLAB's vrrotmat2vec()
+% Rslerped_vrrotvec2mat = vrrotvec2mat( AAslerped_dallen )
+% Rslerped_quat2dc = quat2dcmTursa ( [ Qslerped_dallen(4), Qslerped_dallen(1:3) ] )    % assumes scalar is in the first position of the matrix
 % % test inverse funtions -- values below should equal AAslerped_dallen (not working yet :()
 % AAslerped_dallen_dallenRotMat2axisAngle = rotMat2axisAngle ( Rslerped_dallen )
 % AAslerped_dallen_vrrotmat2vec = vrrotmat2vec ( Rslerped_dallen )
@@ -105,36 +105,35 @@ function [ R ] = axisAngle2rotMat ( AA )
 %AXISANGLE2ROTMAT Summary
 %   Detailed explanation goes here
 theta = AA( 4 );
-rn = AA ( 1:3 );
-r = rn * theta;
 rMag = abs( theta );
-% create rx based on the scaled r (magnitude of theta)?
-rx = [                        ...
-    0       -r(3)	r(2)	; ...
-    r(3)	0       -r(1)	; ...
-    -r(2)	r(1)	0         ...
-    ];
-% or should I create rx based on the normalized rn (magnitude of 1)?
-rxn = [                        ...
+rn = AA ( 1:3 );
+% The working formula for R below needs a cross product matrix of r based
+%      on the normalized rn (magnitude of 1)
+rnx = [                       ...
     0       -rn(3)	rn(2)   ; ...
     rn(3)   0       -rn(1)	; ...
     -rn(2)  rn(1)   0         ...
     ];
-
-secondTermSinc = sinc(rMag) * rxn;
-secondTermSinOverMag = (sin(pi * rMag) / (pi * rMag)) * rxn;
-
-% TODO: this calculation seems to still be a bit off (diagonal values are
-%      correct, but all upper right and lower left values are not. Does
-%      that suggest there is something wrong with the rx matrix or the
-%      second term in the function below?)
-% R = cos(rMag) * eye(3)                              ...    
-%     + sinc(rMag) * rx                               ... (sin(pi * rMag) / (pi * rMag)) * rx
-%     + ( ( 1 - cos(rMag) ) / rMag^2 ) * ( r * r' )   ; 
-% another version of Rodriguez formula from wikipedia -- http://en.wikipedia.org/wiki/Rodrigues'_rotation_formula#Conversion_to_rotation_matrix
-R = cos(rMag) * eye(3)           	...    
-    + sin(rMag) * rxn               	...
+% another version of Rodriguez formula from wikipedia which works!
+%     -- http://en.wikipedia.org/wiki/Rodrigues'_rotation_formula#Conversion_to_rotation_matrix
+R = cos(rMag) * eye(3)                  ...    
+    + sin(rMag) * rnx               	...
     + ( 1 - cos(rMag) ) * ( rn * rn' )	; 
+
+% % NOTES: values returned by function provided in the text (below) are still 
+%      wrong (diagonal values are correct, but all upper right and lower 
+%      left values are not. Does that suggest there is something wrong with 
+%      the rx matrix I constructed, or the second term in the function below?)
+% % For formula in text, rx seems based on the scaled r (magnitude of theta)
+% r = rn * theta;
+% rx = [                      ...
+%     0       -r(3)	r(2)	; ...
+%     r(3)	0       -r(1)	; ...
+%     -r(2)	r(1)	0         ...
+%     ];
+% R = cos(rMag) * eye(3)                              ...    
+%     + ( sin(pi * rMag) / (pi * rMag) ) * rx         ...
+%     + ( ( 1 - cos(rMag) ) / rMag^2 ) * ( r * r' )   ; 
 end
 
 %% preexisting examples
